@@ -1,12 +1,11 @@
 package com.diegoygabriela.backend_novalink.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "eventos")
@@ -14,28 +13,39 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Evento{
+public class Evento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String nombre;
+    // Pareja que creó el evento
+    @ManyToOne
+    @JoinColumn(name = "pareja_id", nullable = false)
+    private Pareja pareja;
 
-    @Column(length = 500)
+    // Título del evento
+    @Column(length = 100, nullable = false)
+    private String titulo;
+
+    // Descripción del evento
+    @Column(length = 1000)
     private String descripcion;
 
-    @Column(name = "fecha_inicio", nullable = false)
-    private LocalDateTime fechaInicio;
+    // Fecha del evento
+    @Column(nullable = false)
+    private LocalDate fecha;
 
-    @Column(name = "fecha_fin", nullable = false)
-    private LocalDateTime fechaFin;
+    // Tipo o categoría del evento: "Aniversario", "Cumpleaños", "Viaje", etc.
+    @Column(length = 50)
+    private String tipo;
 
-    @Column(length = 150)
-    private String ubicacion;
+    // Recuerdos asociados al evento (opcional)
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MultimediaEvento> recuerdos;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cita_id", nullable = false)
-    private Cita cita;
+    // Lugar asociado al evento (opcional)
+    @ManyToOne
+    @JoinColumn(name = "lugar_id")
+    private Lugar lugar;
 }

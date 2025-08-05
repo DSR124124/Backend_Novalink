@@ -1,12 +1,9 @@
 package com.diegoygabriela.backend_novalink.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,50 +13,44 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cita {
+public class Cita implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    // Pareja a la que pertenece la cita
+    @ManyToOne
+    @JoinColumn(name = "pareja_id", nullable = false)
+    private Pareja pareja;
+
+    // Lugar donde se llevó a cabo
+    @ManyToOne
+    @JoinColumn(name = "lugar_id", nullable = false)
+    private Lugar lugar;
+
+    // Categoría o tipo de la cita (ej: Cena, Viaje, Película)
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private CategoriaCita categoriaCita;
+
+    // Título de la cita
+    @Column(length = 100, nullable = false)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
+    // Descripción opcional
+    @Column(length = 1000)
     private String descripcion;
 
-    @Column(name = "fecha_hora", nullable = false)
-    private LocalDateTime fechaHora;
+    // Fecha y hora de la cita
+    @Column(nullable = false)
+    private LocalDateTime fecha;
 
-    @Column(length = 200)
-    private String direccion;
-
-    @Column(precision = 10, scale = 6)
-    private BigDecimal latitud;
-
-    @Column(precision = 10, scale = 6)
-    private BigDecimal longitud;
-
-    @Column
-    private Integer valoracion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private CategoriaCita categoria;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
+    // Recuerdos multimedia (fotos, videos, etc.)
     @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Multimedia> multimedia;
+    private List<Multimedia> recuerdos;
 
+    // Notas personales asociadas a la cita
     @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Nota> notas;
-
-    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleRegalo> regalos;
-
-    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Evento> eventos;
 }

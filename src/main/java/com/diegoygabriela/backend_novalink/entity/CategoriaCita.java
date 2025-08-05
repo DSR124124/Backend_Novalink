@@ -1,10 +1,7 @@
 package com.diegoygabriela.backend_novalink.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,12 +18,15 @@ public class CategoriaCita implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    // Nombre visible para el usuario
+    @Column(length = 50, nullable = false, unique = true)
     private String nombre;
 
-    @Column(columnDefinition = "TEXT")
+    // Descripción opcional
+    @Column(length = 200)
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    // Citas asociadas a esta categoría
+    @OneToMany(mappedBy = "categoriaCita")
     private List<Cita> citas;
 }

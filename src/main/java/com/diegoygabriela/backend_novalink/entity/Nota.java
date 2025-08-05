@@ -1,11 +1,9 @@
 package com.diegoygabriela.backend_novalink.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,22 +12,27 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Nota {
+public class Nota implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String titulo;
+    // Usuario que escribió la nota
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario autor;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String contenido;
-
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Cita a la que pertenece la nota
+    @ManyToOne
     @JoinColumn(name = "cita_id", nullable = false)
     private Cita cita;
+
+    // Contenido de la nota
+    @Column(length = 1000, nullable = false)
+    private String contenido;
+
+    // Fecha de creación de la nota
+    @Column(nullable = false)
+    private LocalDateTime fechaCreacion;
 }

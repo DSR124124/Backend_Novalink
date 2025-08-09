@@ -6,6 +6,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.DetalleRegaloService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class DetalleRegaloController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody DetalleRegaloDTO dto) {
+    public void registrar(@Valid @RequestBody DetalleRegaloDTO dto) {
         
         DetalleRegalo detalleRegalo = modelMapper.map(dto, DetalleRegalo.class);
         detalleRegaloService.insert(detalleRegalo);
@@ -41,7 +42,7 @@ public class DetalleRegaloController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody DetalleRegaloDTO dto) {
+    public void modificar(@Valid @RequestBody DetalleRegaloDTO dto) {
         
         DetalleRegalo detalleRegalo = modelMapper.map(dto, DetalleRegalo.class);
         detalleRegaloService.insert(detalleRegalo);

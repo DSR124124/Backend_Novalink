@@ -6,6 +6,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.NotaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class NotaController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody NotaDTO dto) {
+    public void registrar(@Valid @RequestBody NotaDTO dto) {
         
         Nota nota = modelMapper.map(dto, Nota.class);
         notaService.insert(nota);
@@ -41,7 +42,7 @@ public class NotaController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody NotaDTO dto) {
+    public void modificar(@Valid @RequestBody NotaDTO dto) {
         
         Nota nota = modelMapper.map(dto, Nota.class);
         notaService.insert(nota);

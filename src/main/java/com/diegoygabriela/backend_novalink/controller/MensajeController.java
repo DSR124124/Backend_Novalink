@@ -6,6 +6,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.MensajeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class MensajeController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody MensajeDTO dto) {
+    public void registrar(@Valid @RequestBody MensajeDTO dto) {
         
         Mensaje mensaje = modelMapper.map(dto, Mensaje.class);
         mensajeService.insert(mensaje);
@@ -41,7 +42,7 @@ public class MensajeController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody MensajeDTO dto) {
+    public void modificar(@Valid @RequestBody MensajeDTO dto) {
         
         Mensaje mensaje = modelMapper.map(dto, Mensaje.class);
         mensajeService.insert(mensaje);

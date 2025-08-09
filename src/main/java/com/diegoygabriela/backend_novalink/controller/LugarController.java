@@ -6,6 +6,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.LugarService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class LugarController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody LugarDTO dto) {
+    public void registrar(@Valid @RequestBody LugarDTO dto) {
         
         Lugar lugar = modelMapper.map(dto, Lugar.class);
         lugarService.insert(lugar);
@@ -41,7 +42,7 @@ public class LugarController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody LugarDTO dto) {
+    public void modificar(@Valid @RequestBody LugarDTO dto) {
         
         Lugar lugar = modelMapper.map(dto, Lugar.class);
         lugarService.insert(lugar); // insert también hace update

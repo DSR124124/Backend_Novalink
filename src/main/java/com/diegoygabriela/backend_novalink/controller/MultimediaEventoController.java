@@ -6,6 +6,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.MultimediaEventoService
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class MultimediaEventoController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody MultimediaEventoDTO dto) {
+    public void registrar(@Valid @RequestBody MultimediaEventoDTO dto) {
         
         MultimediaEvento multimediaEvento = modelMapper.map(dto, MultimediaEvento.class);
         multimediaEventoService.insert(multimediaEvento);
@@ -41,7 +42,7 @@ public class MultimediaEventoController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody MultimediaEventoDTO dto) {
+    public void modificar(@Valid @RequestBody MultimediaEventoDTO dto) {
         
         MultimediaEvento multimediaEvento = modelMapper.map(dto, MultimediaEvento.class);
         multimediaEventoService.insert(multimediaEvento);

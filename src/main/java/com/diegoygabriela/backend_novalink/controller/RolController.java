@@ -5,6 +5,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.RolService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class RolController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody RolDTO dto) {
+    public void registrar(@Valid @RequestBody RolDTO dto) {
         
         Role role = modelMapper.map(dto, Role.class);
         rolService.insert(role);
@@ -39,7 +40,7 @@ public class RolController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody RolDTO dto) {
+    public void modificar(@Valid @RequestBody RolDTO dto) {
         
         Role role = modelMapper.map(dto, Role.class);
         rolService.insert(role);

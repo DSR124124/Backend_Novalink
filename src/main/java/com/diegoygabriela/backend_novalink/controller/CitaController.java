@@ -6,6 +6,7 @@ import com.diegoygabriela.backend_novalink.service.Inter.CitaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class CitaController {
     private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
-    public void registrar(@RequestBody CitaDTO dto) {
+    public void registrar(@Valid @RequestBody CitaDTO dto) {
         
         Cita cita = modelMapper.map(dto, Cita.class);
         citaService.insert(cita);
@@ -41,7 +42,7 @@ public class CitaController {
     }
 
     @PutMapping("/modificar")
-    public void modificar(@RequestBody CitaDTO dto) {
+    public void modificar(@Valid @RequestBody CitaDTO dto) {
         
         Cita cita = modelMapper.map(dto, Cita.class);
         citaService.insert(cita);

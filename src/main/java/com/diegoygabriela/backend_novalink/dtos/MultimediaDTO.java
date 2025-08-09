@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -11,9 +14,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MultimediaDTO {
     private Long id;
-    private String tipo;
-    private String url;
-    private String descripcion;
+    
+    @NotNull(message = "La cita es obligatoria")
     private Long citaId;
+    
+    @NotNull(message = "El autor es obligatorio")
+    private Long autorId;
+    
+    @NotBlank(message = "La URL es obligatoria")
+    @Size(max = 255, message = "La URL no puede exceder 255 caracteres")
+    private String url;
+    
+    @NotBlank(message = "El tipo es obligatorio")
+    @Pattern(regexp = "^(FOTO|VIDEO|AUDIO|DOCUMENTO)$", message = "Tipo debe ser: FOTO, VIDEO, AUDIO o DOCUMENTO")
+    private String tipo;
+    
+    @Size(max = 300, message = "La descripción no puede exceder 300 caracteres")
+    private String descripcion;
+    
+    private LocalDateTime fechaSubida;
+    
+    // Campos informativos (solo lectura)
+    private String autorNombre;
     private String citaTitulo;
 }

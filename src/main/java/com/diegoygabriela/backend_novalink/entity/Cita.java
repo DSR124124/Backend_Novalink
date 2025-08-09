@@ -46,6 +46,15 @@ public class Cita implements Serializable {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    // Estado actual de la cita
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoCita estado = EstadoCita.PLANIFICADA;
+
+    // Rating de la cita (1-5 estrellas) - opcional
+    @Column
+    private Integer rating;
+
     // Recuerdos multimedia (fotos, videos, etc.)
     @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Multimedia> recuerdos;

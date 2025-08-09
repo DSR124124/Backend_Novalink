@@ -15,21 +15,25 @@ import java.time.LocalDateTime;
 public class EventoDTO {
     private Long id;
     
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(max = 100, message = "El nombre no puede exceder 100 caracteres")
-    private String nombre;
+    @NotNull(message = "La pareja es obligatoria")
+    private Long parejaId;
+    
+    @NotBlank(message = "El título es obligatorio")
+    @Size(max = 100, message = "El título no puede exceder 100 caracteres")
+    private String titulo;
     
     @Size(max = 1000, message = "La descripción no puede exceder 1000 caracteres")
     private String descripcion;
     
-    @NotNull(message = "La fecha de inicio es obligatoria")
-    private LocalDateTime fechaInicio;
+    @NotNull(message = "La fecha es obligatoria")
+    private LocalDateTime fecha;
     
-    private LocalDateTime fechaFin;
+    @Size(max = 50, message = "El tipo no puede exceder 50 caracteres")
+    private String tipo;
     
-    @Size(max = 200, message = "La ubicación no puede exceder 200 caracteres")
-    private String ubicacion;
+    // Lugar asociado al evento (opcional)
+    private Long lugarId;
     
-    private Long citaId;
-    private String citaTitulo;
+    // Campos informativos (solo lectura)
+    private String lugarNombre;
 }

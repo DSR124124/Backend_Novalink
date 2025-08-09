@@ -37,7 +37,48 @@ public class Lugar implements Serializable {
     @Column(length = 500)
     private String descripcion;
 
+    // Categoría del lugar para iconos en mapa
+    @Enumerated(EnumType.STRING)
+    private CategoriaLugar categoria;
+
+    // Rating promedio del lugar (calculado)
+    @Column
+    private Double ratingPromedio = 0.0;
+
+    // Número de veces visitado
+    @Column
+    private Integer vecesVisitado = 0;
+
+    // Si es un lugar favorito de la pareja
+    @Column
+    private Boolean esFavorito = false;
+
     // Citas que ocurrieron en este lugar (bidireccional opcional)
     @OneToMany(mappedBy = "lugar")
     private List<Cita> citas;
+
+    public enum CategoriaLugar {
+        RESTAURANTE("🍽️", "Restaurante"),
+        CAFE("☕", "Café"),
+        PARQUE("🌳", "Parque"),
+        CINE("🎬", "Cine"),
+        MUSEO("🏛️", "Museo"),
+        PLAYA("🏖️", "Playa"),
+        MONTAÑA("⛰️", "Montaña"),
+        HOGAR("🏠", "Hogar"),
+        VIAJE("✈️", "Viaje"),
+        EVENTO("🎉", "Evento"),
+        OTRO("📍", "Otro");
+
+        private final String icono;
+        private final String nombre;
+
+        CategoriaLugar(String icono, String nombre) {
+            this.icono = icono;
+            this.nombre = nombre;
+        }
+
+        public String getIcono() { return icono; }
+        public String getNombre() { return nombre; }
+    }
 }

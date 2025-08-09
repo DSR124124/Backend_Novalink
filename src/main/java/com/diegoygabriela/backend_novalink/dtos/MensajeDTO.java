@@ -1,19 +1,33 @@
 package com.diegoygabriela.backend_novalink.dtos;
 
-import lombok.Data;
+import lombok.*;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MensajeDTO {
 
     private Long id;
 
-    // IDs relacionados (en lugar de objetos completos para simplificar el DTO)
+    @NotNull(message = "La pareja es obligatoria")
     private Long parejaId;
+    
+    @NotNull(message = "El remitente es obligatorio")
     private Long remitenteId;
 
+    @NotBlank(message = "El contenido es obligatorio")
+    @Size(max = 1000, message = "El contenido no puede exceder 1000 caracteres")
     private String contenido;
+    
     private LocalDateTime fechaEnvio;
-    private String estado;
+    
+    @Pattern(regexp = "^(enviado|leido|eliminado)$", message = "Estado debe ser: enviado, leido o eliminado")
+    private String estado = "enviado";
+    
+    // Campos informativos (solo lectura)
+    private String remitenteNombre;
 }

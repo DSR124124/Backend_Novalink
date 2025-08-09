@@ -35,4 +35,24 @@ public class Nota implements Serializable {
     // Fecha de creación de la nota
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
+
+    // Privacidad de la nota
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoPrivacidad privacidad = TipoPrivacidad.COMPARTIDA;
+
+    public enum TipoPrivacidad {
+        PRIVADA("Solo visible para el autor"),
+        COMPARTIDA("Visible para ambos miembros de la pareja");
+
+        private final String descripcion;
+
+        TipoPrivacidad(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.diegoygabriela.backend_novalink.dtos;
 
+import com.diegoygabriela.backend_novalink.entity.Lugar;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
@@ -30,4 +31,23 @@ public class LugarDTO {
     
     @Size(max = 500, message = "La descripción no puede exceder 500 caracteres")
     private String descripcion;
+    
+    // Categoría del lugar para iconos en mapa
+    private Lugar.CategoriaLugar categoria;
+    
+    // Rating promedio del lugar (calculado)
+    @DecimalMin(value = "0.0", message = "El rating no puede ser negativo")
+    @DecimalMax(value = "5.0", message = "El rating máximo es 5.0")
+    private Double ratingPromedio = 0.0;
+    
+    // Número de veces visitado
+    @Min(value = 0, message = "Las visitas no pueden ser negativas")
+    private Integer vecesVisitado = 0;
+    
+    // Si es un lugar favorito de la pareja
+    private Boolean esFavorito = false;
+    
+    // Campos informativos (solo lectura)
+    private String categoriaIcono;
+    private String categoriaNombre;
 }

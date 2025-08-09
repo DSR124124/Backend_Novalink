@@ -16,19 +16,22 @@ public class DetalleRegaloController {
 
     @Autowired
     private DetalleRegaloService detalleRegaloService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody DetalleRegaloDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        DetalleRegalo detalleRegalo = mapper.map(dto, DetalleRegalo.class);
+        
+        DetalleRegalo detalleRegalo = modelMapper.map(dto, DetalleRegalo.class);
         detalleRegaloService.insert(detalleRegalo);
     }
 
     @GetMapping("/listar")
     public List<DetalleRegaloDTO> listar() {
         return detalleRegaloService.list().stream().map(detalleRegalo -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(detalleRegalo, DetalleRegaloDTO.class);
+            
+            return modelMapper.map(detalleRegalo, DetalleRegaloDTO.class);
         }).collect(Collectors.toList());
     }
 
@@ -39,14 +42,14 @@ public class DetalleRegaloController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody DetalleRegaloDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        DetalleRegalo detalleRegalo = mapper.map(dto, DetalleRegalo.class);
+        
+        DetalleRegalo detalleRegalo = modelMapper.map(dto, DetalleRegalo.class);
         detalleRegaloService.insert(detalleRegalo);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public DetalleRegaloDTO listarId(@PathVariable("id") int id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(detalleRegaloService.listId(id), DetalleRegaloDTO.class);
+        
+        return modelMapper.map(detalleRegaloService.listId(id), DetalleRegaloDTO.class);
     }
 }

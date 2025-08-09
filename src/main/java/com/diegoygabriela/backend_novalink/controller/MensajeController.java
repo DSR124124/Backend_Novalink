@@ -16,19 +16,22 @@ public class MensajeController {
 
     @Autowired
     private MensajeService mensajeService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody MensajeDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Mensaje mensaje = mapper.map(dto, Mensaje.class);
+        
+        Mensaje mensaje = modelMapper.map(dto, Mensaje.class);
         mensajeService.insert(mensaje);
     }
 
     @GetMapping("/listar")
     public List<MensajeDTO> listar() {
         return mensajeService.list().stream().map(mensaje -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(mensaje, MensajeDTO.class);
+            
+            return modelMapper.map(mensaje, MensajeDTO.class);
         }).collect(Collectors.toList());
     }
 
@@ -39,14 +42,14 @@ public class MensajeController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody MensajeDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Mensaje mensaje = mapper.map(dto, Mensaje.class);
+        
+        Mensaje mensaje = modelMapper.map(dto, Mensaje.class);
         mensajeService.insert(mensaje);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public MensajeDTO listarId(@PathVariable("id") Long id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(mensajeService.listId(id), MensajeDTO.class);
+        
+        return modelMapper.map(mensajeService.listId(id), MensajeDTO.class);
     }
 }

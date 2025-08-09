@@ -1,14 +1,16 @@
 package com.diegoygabriela.backend_novalink.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"rol"})})
-
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role implements Serializable {
 
     @Id
@@ -17,22 +19,4 @@ public class Role implements Serializable {
 
     @Column(nullable = false)
     private String rol;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-
 }

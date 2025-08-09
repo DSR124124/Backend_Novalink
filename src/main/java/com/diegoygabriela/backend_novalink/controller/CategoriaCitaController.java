@@ -16,19 +16,22 @@ public class CategoriaCitaController {
 
     @Autowired
     private CategoriaCitaService service;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody CategoriaCitaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        CategoriaCita entity = mapper.map(dto, CategoriaCita.class);
+        
+        CategoriaCita entity = modelMapper.map(dto, CategoriaCita.class);
         service.insert(entity);
     }
 
     @GetMapping("/listar")
     public List<CategoriaCitaDTO> listar() {
-        ModelMapper mapper = new ModelMapper();
+        
         return service.list().stream()
-                .map(entity -> mapper.map(entity, CategoriaCitaDTO.class))
+                .map(entity -> modelMapper.map(entity, CategoriaCitaDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -39,15 +42,15 @@ public class CategoriaCitaController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody CategoriaCitaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        CategoriaCita entity = mapper.map(dto, CategoriaCita.class);
+        
+        CategoriaCita entity = modelMapper.map(dto, CategoriaCita.class);
         service.insert(entity); // insert también funciona como update
     }
 
     @GetMapping("/listar-por-id/{id}")
     public CategoriaCitaDTO listarPorId(@PathVariable("id") Long id) {
-        ModelMapper mapper = new ModelMapper();
+        
         CategoriaCita entity = service.listId(id);
-        return mapper.map(entity, CategoriaCitaDTO.class);
+        return modelMapper.map(entity, CategoriaCitaDTO.class);
     }
 }

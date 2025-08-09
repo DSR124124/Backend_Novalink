@@ -15,20 +15,22 @@ public class RolController {
 
     @Autowired
     private RolService rolService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody RolDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Role role = mapper.map(dto, Role.class);
+        
+        Role role = modelMapper.map(dto, Role.class);
         rolService.insert(role);
     }
 
     @GetMapping("/listar")
     public List<RolDTO> listar() {
-        return rolService.list().stream().map(rol -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(rol, RolDTO.class);
-        }).collect(Collectors.toList());
+        return rolService.list().stream()
+                .map(rol -> modelMapper.map(rol, RolDTO.class))
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/eliminar/{id}")
@@ -38,14 +40,14 @@ public class RolController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody RolDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Role role = mapper.map(dto, Role.class);
+        
+        Role role = modelMapper.map(dto, Role.class);
         rolService.insert(role);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public RolDTO listarId(@PathVariable("id") Long id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(rolService.listId(id), RolDTO.class);
+        
+        return modelMapper.map(rolService.listId(id), RolDTO.class);
     }
 }

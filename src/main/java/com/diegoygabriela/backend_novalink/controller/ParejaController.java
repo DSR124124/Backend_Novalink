@@ -16,20 +16,22 @@ public class ParejaController {
 
     @Autowired
     private ParejaService parejaService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody ParejaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Pareja pareja = mapper.map(dto, Pareja.class);
+
+        Pareja pareja = modelMapper.map(dto, Pareja.class);
         parejaService.insert(pareja);
     }
 
     @GetMapping("/listar")
     public List<ParejaDTO> listar() {
-        return parejaService.list().stream().map(pareja -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(pareja, ParejaDTO.class);
-        }).collect(Collectors.toList());
+        return parejaService.list().stream()
+                .map(pareja -> modelMapper.map(pareja, ParejaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/eliminar/{id}")
@@ -39,14 +41,13 @@ public class ParejaController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody ParejaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Pareja pareja = mapper.map(dto, Pareja.class);
+
+        Pareja pareja = modelMapper.map(dto, Pareja.class);
         parejaService.insert(pareja);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public ParejaDTO listarId(@PathVariable("id") Long id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(parejaService.listId(id), ParejaDTO.class);
+        return modelMapper.map(parejaService.listId(id), ParejaDTO.class);
     }
 }

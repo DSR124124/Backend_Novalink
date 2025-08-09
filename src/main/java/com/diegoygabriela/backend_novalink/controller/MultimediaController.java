@@ -16,19 +16,22 @@ public class MultimediaController {
 
     @Autowired
     private MultimediaService multimediaService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody MultimediaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Multimedia multimedia = mapper.map(dto, Multimedia.class);
+        
+        Multimedia multimedia = modelMapper.map(dto, Multimedia.class);
         multimediaService.insert(multimedia);
     }
 
     @GetMapping("/listar")
     public List<MultimediaDTO> listar() {
         return multimediaService.list().stream().map(multimedia -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(multimedia, MultimediaDTO.class);
+            
+            return modelMapper.map(multimedia, MultimediaDTO.class);
         }).collect(Collectors.toList());
     }
 
@@ -39,14 +42,14 @@ public class MultimediaController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody MultimediaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Multimedia multimedia = mapper.map(dto, Multimedia.class);
+        
+        Multimedia multimedia = modelMapper.map(dto, Multimedia.class);
         multimediaService.insert(multimedia);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public MultimediaDTO listarId(@PathVariable("id") int id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(multimediaService.listId(id), MultimediaDTO.class);
+        
+        return modelMapper.map(multimediaService.listId(id), MultimediaDTO.class);
     }
 }

@@ -15,20 +15,21 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody UsuarioDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Usuario usuario = mapper.map(dto, Usuario.class);
+        Usuario usuario = modelMapper.map(dto, Usuario.class);
         usuarioService.insert(usuario);
     }
 
     @GetMapping("/listar")
     public List<UsuarioDTO> listar() {
-        return usuarioService.list().stream().map(usuario -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(usuario, UsuarioDTO.class);
-        }).collect(Collectors.toList());
+        return usuarioService.list().stream()
+                .map(usuario -> modelMapper.map(usuario, UsuarioDTO.class))
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/eliminar/{id}")
@@ -38,19 +39,17 @@ public class UsuarioController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody UsuarioDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Usuario usuario = mapper.map(dto, Usuario.class);
+        Usuario usuario = modelMapper.map(dto, Usuario.class);
         usuarioService.insert(usuario); // Insert funciona también como update en JPA
     }
 
     @GetMapping("/listar-por-id/{id}")
     public UsuarioDTO listarId(@PathVariable("id") Long id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(usuarioService.listId(id), UsuarioDTO.class);
+        return modelMapper.map(usuarioService.listId(id), UsuarioDTO.class);
     }
+    
     @GetMapping("/listar-por-username/{username}")
     public UsuarioDTO listarUsername(@PathVariable("username") String username) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(usuarioService.findByUsername(username), UsuarioDTO.class);
+        return modelMapper.map(usuarioService.findByUsername(username), UsuarioDTO.class);
     }
 }

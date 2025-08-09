@@ -16,19 +16,22 @@ public class NotaController {
 
     @Autowired
     private NotaService notaService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody NotaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Nota nota = mapper.map(dto, Nota.class);
+        
+        Nota nota = modelMapper.map(dto, Nota.class);
         notaService.insert(nota);
     }
 
     @GetMapping("/listar")
     public List<NotaDTO> listar() {
         return notaService.list().stream().map(nota -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(nota, NotaDTO.class);
+            
+            return modelMapper.map(nota, NotaDTO.class);
         }).collect(Collectors.toList());
     }
 
@@ -39,14 +42,14 @@ public class NotaController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody NotaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Nota nota = mapper.map(dto, Nota.class);
+        
+        Nota nota = modelMapper.map(dto, Nota.class);
         notaService.insert(nota);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public NotaDTO listarId(@PathVariable("id") int id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(notaService.listId(id), NotaDTO.class);
+        
+        return modelMapper.map(notaService.listId(id), NotaDTO.class);
     }
 }

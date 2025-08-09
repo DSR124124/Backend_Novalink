@@ -16,19 +16,22 @@ public class CitaController {
 
     @Autowired
     private CitaService citaService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody CitaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Cita cita = mapper.map(dto, Cita.class);
+        
+        Cita cita = modelMapper.map(dto, Cita.class);
         citaService.insert(cita);
     }
 
     @GetMapping("/listar")
     public List<CitaDTO> listar() {
         return citaService.list().stream().map(cita -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(cita, CitaDTO.class);
+            
+            return modelMapper.map(cita, CitaDTO.class);
         }).collect(Collectors.toList());
     }
 
@@ -39,14 +42,14 @@ public class CitaController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody CitaDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Cita cita = mapper.map(dto, Cita.class);
+        
+        Cita cita = modelMapper.map(dto, Cita.class);
         citaService.insert(cita);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public CitaDTO listarId(@PathVariable("id") int id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(citaService.listId(id), CitaDTO.class);
+        
+        return modelMapper.map(citaService.listId(id), CitaDTO.class);
     }
 }

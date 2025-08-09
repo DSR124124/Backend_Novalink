@@ -16,19 +16,22 @@ public class EventoController {
 
     @Autowired
     private EventoService eventoService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/registrar")
     public void registrar(@RequestBody EventoDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Evento evento = mapper.map(dto, Evento.class);
+        
+        Evento evento = modelMapper.map(dto, Evento.class);
         eventoService.insert(evento);
     }
 
     @GetMapping("/listar")
     public List<EventoDTO> listar() {
         return eventoService.list().stream().map(evento -> {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(evento, EventoDTO.class);
+            
+            return modelMapper.map(evento, EventoDTO.class);
         }).collect(Collectors.toList());
     }
 
@@ -39,14 +42,14 @@ public class EventoController {
 
     @PutMapping("/modificar")
     public void modificar(@RequestBody EventoDTO dto) {
-        ModelMapper mapper = new ModelMapper();
-        Evento evento = mapper.map(dto, Evento.class);
+        
+        Evento evento = modelMapper.map(dto, Evento.class);
         eventoService.insert(evento);
     }
 
     @GetMapping("/listar-por-id/{id}")
     public EventoDTO listarId(@PathVariable("id") int id) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(eventoService.listId(id), EventoDTO.class);
+        
+        return modelMapper.map(eventoService.listId(id), EventoDTO.class);
     }
 }

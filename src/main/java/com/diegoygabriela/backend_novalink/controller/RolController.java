@@ -1,6 +1,6 @@
 package com.diegoygabriela.backend_novalink.controller;
 import com.diegoygabriela.backend_novalink.dtos.RolDTO;
-import com.diegoygabriela.backend_novalink.entity.Rol;
+import com.diegoygabriela.backend_novalink.entity.Role;
 import com.diegoygabriela.backend_novalink.service.Inter.RolService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ public class RolController {
     @PostMapping("/registrar")
     public void registrar(@RequestBody RolDTO dto) {
         ModelMapper mapper = new ModelMapper();
-        Rol rol = mapper.map(dto, Rol.class);
-        rolService.insert(rol);
+        Role role = mapper.map(dto, Role.class);
+        rolService.insert(role);
     }
 
     @GetMapping("/listar")
@@ -39,8 +39,8 @@ public class RolController {
     @PutMapping("/modificar")
     public void modificar(@RequestBody RolDTO dto) {
         ModelMapper mapper = new ModelMapper();
-        Rol rol = mapper.map(dto, Rol.class);
-        rolService.insert(rol);
+        Role role = mapper.map(dto, Role.class);
+        rolService.insert(role);
     }
 
     @GetMapping("/listar-por-id/{id}")

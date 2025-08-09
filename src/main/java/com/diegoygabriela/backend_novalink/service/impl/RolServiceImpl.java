@@ -1,6 +1,6 @@
 package com.diegoygabriela.backend_novalink.service.impl;
 
-import com.diegoygabriela.backend_novalink.entity.Rol;
+import com.diegoygabriela.backend_novalink.entity.Role;
 import com.diegoygabriela.backend_novalink.repository.RolRepository;
 import com.diegoygabriela.backend_novalink.service.Inter.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,12 @@ public class RolServiceImpl implements RolService {
     private RolRepository rolRepository;
 
     @Override
-    public void insert(Rol rol) {
-        rolRepository.save(rol);
+    public void insert(Role role) {
+        rolRepository.save(role);
     }
 
     @Override
-    public List<Rol> list() {
+    public List<Role> list() {
         return rolRepository.findAll();
     }
 
@@ -30,7 +30,7 @@ public class RolServiceImpl implements RolService {
     }
 
     @Override
-    public Rol listId(Long idRol) {
-        return rolRepository.findById(idRol).orElse(new Rol());
+    public Role listId(Long idRol) {
+        return rolRepository.findById(idRol).orElse(new Role());
     }
 }

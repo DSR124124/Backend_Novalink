@@ -1,11 +1,11 @@
 package com.diegoygabriela.backend_novalink.service.Inter;
-import com.diegoygabriela.backend_novalink.entity.Rol;
+import com.diegoygabriela.backend_novalink.entity.Role;
 
 import java.util.List;
 
 public interface RolService {
-    void insert(Rol rol);
-    List<Rol> list();
+    void insert(Role rol);
+    List<Role> list();
     void delete(Long idRol);
-    Rol listId(Long idRol);
+    Role listId(Long idRol);
 }

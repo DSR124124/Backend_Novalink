@@ -1,5 +1,6 @@
 package com.diegoygabriela.backend_novalink.service.impl;
 import com.diegoygabriela.backend_novalink.entity.Lugar;
+import com.diegoygabriela.backend_novalink.entity.Lugar.CategoriaLugar;
 import com.diegoygabriela.backend_novalink.repository.LugarRepository;
 import com.diegoygabriela.backend_novalink.service.Inter.LugarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,30 @@ public class LugarServiceImpl implements LugarService {
     @Override
     public Lugar listId(Long idLugar) {
         return lugarRepository.findById(idLugar).orElse(new Lugar());
+    }
+
+    @Override
+    public List<Lugar> findByNombreContainingIgnoreCase(String nombre) {
+        return lugarRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    @Override
+    public List<Lugar> findByCategoria(CategoriaLugar categoria) {
+        return lugarRepository.findByCategoria(categoria);
+    }
+
+    @Override
+    public List<Lugar> findByEsFavorito(Boolean esFavorito) {
+        return lugarRepository.findByEsFavorito(esFavorito);
+    }
+
+    @Override
+    public List<Lugar> findMasVisitados() {
+        return lugarRepository.findMasVisitados();
+    }
+
+    @Override
+    public List<Lugar> findMejorCalificados() {
+        return lugarRepository.findMejorCalificados();
     }
 }

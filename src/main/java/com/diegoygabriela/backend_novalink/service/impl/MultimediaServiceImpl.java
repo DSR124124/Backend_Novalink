@@ -24,12 +24,12 @@ public class MultimediaServiceImpl implements MultimediaService {
     }
 
     @Override
-    public void delete(int idMultimedia) {
-        multimediaRepository.deleteById((long) idMultimedia);
+    public void delete(Long idMultimedia) {
+        multimediaRepository.deleteById(idMultimedia);
     }
 
     @Override
-    public Multimedia listId(int idMultimedia) {
-        return multimediaRepository.findById((long) idMultimedia).orElse(new Multimedia());
+    public Multimedia listId(Long idMultimedia) {
+        return multimediaRepository.findById(idMultimedia).orElse(new Multimedia());
     }
 }

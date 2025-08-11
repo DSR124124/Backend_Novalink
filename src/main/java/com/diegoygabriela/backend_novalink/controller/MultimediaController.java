@@ -37,7 +37,7 @@ public class MultimediaController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public void eliminar(@PathVariable("id") int id) {
+    public void eliminar(@PathVariable("id") Long id) {
         multimediaService.delete(id);
     }
 
@@ -49,7 +49,7 @@ public class MultimediaController {
     }
 
     @GetMapping("/listar-por-id/{id}")
-    public MultimediaDTO listarId(@PathVariable("id") int id) {
+    public MultimediaDTO listarId(@PathVariable("id") Long id) {
         
         return modelMapper.map(multimediaService.listId(id), MultimediaDTO.class);
     }

@@ -37,7 +37,7 @@ public class NotaController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public void eliminar(@PathVariable("id") int id) {
+    public void eliminar(@PathVariable("id") Long id) {
         notaService.delete(id);
     }
 
@@ -49,7 +49,7 @@ public class NotaController {
     }
 
     @GetMapping("/listar-por-id/{id}")
-    public NotaDTO listarId(@PathVariable("id") int id) {
+    public NotaDTO listarId(@PathVariable("id") Long id) {
         
         return modelMapper.map(notaService.listId(id), NotaDTO.class);
     }

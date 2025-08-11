@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -26,7 +26,7 @@ public class EventoDTO {
     private String descripcion;
     
     @NotNull(message = "La fecha es obligatoria")
-    private LocalDateTime fecha;
+    private LocalDate fecha;
     
     @Size(max = 50, message = "El tipo no puede exceder 50 caracteres")
     private String tipo;

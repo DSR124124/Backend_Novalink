@@ -8,7 +8,7 @@ public interface MultimediaService {
 
     public void insert(Multimedia multimedia);
     public List<Multimedia> list();
-    public void delete(int idMultimedia);
-    public Multimedia listId(int idMultimedia);
+    public void delete(Long idMultimedia);
+    public Multimedia listId(Long idMultimedia);
 
 }

@@ -24,12 +24,12 @@ public class NotaServiceImpl implements NotaService {
     }
 
     @Override
-    public void delete(int idNota) {
-        notaRepository.deleteById((long) idNota);
+    public void delete(Long idNota) {
+        notaRepository.deleteById(idNota);
     }
 
     @Override
-    public Nota listId(int idNota) {
-        return notaRepository.findById((long) idNota).orElse(new Nota());
+    public Nota listId(Long idNota) {
+        return notaRepository.findById(idNota).orElse(new Nota());
     }
 }

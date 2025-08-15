@@ -51,7 +51,7 @@ public class UsuarioDTO {
     private String genero;
     
     @NotNull(message = "El rol es obligatorio")
-    private Role role;
+    private Integer roleId; // Solo el ID del role, no el objeto completo
 
 }
 

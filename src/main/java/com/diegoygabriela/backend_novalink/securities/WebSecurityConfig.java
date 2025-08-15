@@ -66,6 +66,7 @@ public class WebSecurityConfig {
                                 "/webjars/**",
                                 "/login",
                                 "/usuarios",
+                                "/usuarios/registrar",
                                 "/roles"
 
                         ).permitAll()

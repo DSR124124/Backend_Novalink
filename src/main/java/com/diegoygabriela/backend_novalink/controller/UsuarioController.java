@@ -36,7 +36,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public void eliminar(@PathVariable("id") Integer id) {
+    public void eliminar(@PathVariable("id") Long id) {
         usuarioService.delete(id);
     }
 
@@ -47,7 +47,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/listar-por-id/{id}")
-    public UsuarioDTO listarId(@PathVariable("id") Integer id) {
+    public UsuarioDTO listarId(@PathVariable("id") Long id) {
         return modelMapper.map(usuarioService.listId(id), UsuarioDTO.class);
     }
     

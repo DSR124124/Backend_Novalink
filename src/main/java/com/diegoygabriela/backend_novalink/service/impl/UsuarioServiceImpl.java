@@ -39,12 +39,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void delete(Integer idUsuario) {
+    public void delete(Long idUsuario) {
         usuarioRepository.deleteById(idUsuario);
     }
 
     @Override
-    public Usuario listId(Integer idUsuario) {
+    public Usuario listId(Long idUsuario) {
         return usuarioRepository.findById(idUsuario).orElse(new Usuario());
     }
     

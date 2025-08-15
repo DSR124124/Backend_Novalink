@@ -42,6 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
      * Method to register a new user with roleId
      * This method fetches the role from database and assigns it to the user
      */
+    @Override
     public void registrarUsuarioConRoleId(Usuario usuario, Integer roleId) {
         // Validate roleId
         if (roleId == null) {

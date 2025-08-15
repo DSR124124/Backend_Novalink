@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import com.diegoygabriela.backend_novalink.service.impl.UsuarioServiceImpl;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -29,7 +28,7 @@ public class UsuarioController {
         
         // Use the new method that handles roleId
         if (dto.getRoleId() != null) {
-            ((UsuarioServiceImpl) usuarioService).registrarUsuarioConRoleId(usuario, dto.getRoleId());
+            usuarioService.registrarUsuarioConRoleId(usuario, dto.getRoleId());
         } else {
             throw new RuntimeException("El ID del rol es obligatorio");
         }

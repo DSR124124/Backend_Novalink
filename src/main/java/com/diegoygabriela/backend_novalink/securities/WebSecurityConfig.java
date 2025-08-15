@@ -68,7 +68,6 @@ public class WebSecurityConfig {
                                 "/usuarios",
                                 "/usuarios/registrar",
                                 "/roles"
-
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -79,4 +78,4 @@ public class WebSecurityConfig {
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
-}
+} 

@@ -9,5 +9,4 @@ public interface UsuarioService {
     void delete(Integer idUsuario);
     Usuario listId(Integer idUsuario);
     Usuario findByUsername(String username);
-    void registrarUsuarioConRoleId(Usuario usuario, Integer roleId);
 }

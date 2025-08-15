@@ -1,9 +1,7 @@
 package com.diegoygabriela.backend_novalink.service.impl;
 
 import com.diegoygabriela.backend_novalink.entity.Usuario;
-import com.diegoygabriela.backend_novalink.entity.Role;
 import com.diegoygabriela.backend_novalink.repository.UsuarioRepository;
-import com.diegoygabriela.backend_novalink.repository.RolRepository;
 import com.diegoygabriela.backend_novalink.service.Inter.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +13,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
-    @Autowired
-    private RolRepository rolRepository;
 
     @Override
     public void insert(Usuario usuario) {
@@ -36,28 +31,6 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setIdUsuario(null);
         }
         usuarioRepository.save(usuario);
-    }
-
-    /**
-     * Method to register a new user with roleId
-     * This method fetches the role from database and assigns it to the user
-     */
-    @Override
-    public void registrarUsuarioConRoleId(Usuario usuario, Integer roleId) {
-        // Validate roleId
-        if (roleId == null) {
-            throw new RuntimeException("El ID del rol es obligatorio");
-        }
-        
-        // Fetch the role from database
-        Role role = rolRepository.findById(roleId.longValue())
-            .orElseThrow(() -> new RuntimeException("No se encontró el rol con ID: " + roleId));
-        
-        // Assign the role to the user
-        usuario.setRole(role);
-        
-        // Now call the regular insert method
-        insert(usuario);
     }
 
     @Override

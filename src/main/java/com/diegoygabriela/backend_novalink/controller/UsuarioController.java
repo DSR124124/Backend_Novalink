@@ -1,5 +1,6 @@
 package com.diegoygabriela.backend_novalink.controller;
 import com.diegoygabriela.backend_novalink.dtos.UsuarioDTO;
+import com.diegoygabriela.backend_novalink.dtos.CambioPasswordDTO;
 import com.diegoygabriela.backend_novalink.entity.Usuario;
 import com.diegoygabriela.backend_novalink.service.Inter.UsuarioService;
 import org.modelmapper.ModelMapper;
@@ -40,10 +41,29 @@ public class UsuarioController {
         usuarioService.delete(id);
     }
 
+    /**
+     * Actualiza los datos del usuario (excluyendo la contraseña).
+     * Para cambiar la contraseña, usa el endpoint /cambiar-password
+     * Solo se actualizan los campos que se envían (no nulos)
+     */
     @PutMapping("/modificar")
     public void modificar(@Valid @RequestBody UsuarioDTO dto) {
         Usuario usuario = modelMapper.map(dto, Usuario.class);
         usuarioService.update(usuario); // Use update method instead of insert
+    }
+
+    /**
+     * Endpoint específico para cambiar la contraseña del usuario.
+     * Las contraseñas se envían en texto plano y se hashean automáticamente.
+     */
+    @PutMapping("/cambiar-password")
+    public void cambiarPassword(@Valid @RequestBody CambioPasswordDTO dto) {
+        // Validar que las contraseñas coincidan
+        if (!dto.getPasswordNueva().equals(dto.getPasswordConfirmacion())) {
+            throw new RuntimeException("La nueva contraseña y su confirmación no coinciden.");
+        }
+        
+        usuarioService.cambiarPassword(dto.getIdUsuario(), dto.getPasswordActual(), dto.getPasswordNueva());
     }
 
     @GetMapping("/listar-por-id/{id}")

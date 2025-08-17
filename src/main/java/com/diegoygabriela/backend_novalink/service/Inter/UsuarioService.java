@@ -6,6 +6,7 @@ import java.util.List;
 public interface UsuarioService {
     void insert(Usuario usuario);
     void update(Usuario usuario);
+    void cambiarPassword(Integer idUsuario, String passwordActual, String passwordNueva);
     List<Usuario> list();
     void delete(Integer idUsuario);
     Usuario listId(Integer idUsuario);

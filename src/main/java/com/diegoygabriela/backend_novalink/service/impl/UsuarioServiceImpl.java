@@ -4,6 +4,7 @@ import com.diegoygabriela.backend_novalink.entity.Usuario;
 import com.diegoygabriela.backend_novalink.repository.UsuarioRepository;
 import com.diegoygabriela.backend_novalink.service.Inter.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void insert(Usuario usuario) {
@@ -59,8 +63,38 @@ public class UsuarioServiceImpl implements UsuarioService {
             }
         }
         
-        // Preserve the original ID and update the user
-        usuarioRepository.save(usuario);
+        // Update only non-null fields, preserving existing values for null fields
+        if (usuario.getNombre() != null) {
+            existingUsuario.setNombre(usuario.getNombre());
+        }
+        if (usuario.getApellido() != null) {
+            existingUsuario.setApellido(usuario.getApellido());
+        }
+        if (usuario.getCorreo() != null) {
+            existingUsuario.setCorreo(usuario.getCorreo());
+        }
+        if (usuario.getUsername() != null) {
+            existingUsuario.setUsername(usuario.getUsername());
+        }
+        // Note: Password is NOT updated here - use /cambiar-password endpoint for that
+        if (usuario.getEnabled() != null) {
+            existingUsuario.setEnabled(usuario.getEnabled());
+        }
+        if (usuario.getFotoPerfil() != null) {
+            existingUsuario.setFotoPerfil(usuario.getFotoPerfil());
+        }
+        if (usuario.getFechaNacimiento() != null) {
+            existingUsuario.setFechaNacimiento(usuario.getFechaNacimiento());
+        }
+        if (usuario.getGenero() != null) {
+            existingUsuario.setGenero(usuario.getGenero());
+        }
+        if (usuario.getRole() != null) {
+            existingUsuario.setRole(usuario.getRole());
+        }
+        
+        // Save the updated user
+        usuarioRepository.save(existingUsuario);
     }
 
     @Override
@@ -81,5 +115,29 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario findByUsername(String username) {
         return usuarioRepository.findByUsername(username);
+    }
+
+    @Override
+    public void cambiarPassword(Integer idUsuario, String passwordActual, String passwordNueva) {
+        // Verificar que el usuario existe
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
+        
+        // Verificar que la contraseña actual sea correcta
+        if (!passwordEncoder.matches(passwordActual, usuario.getPassword())) {
+            throw new RuntimeException("La contraseña actual es incorrecta.");
+        }
+        
+        // Verificar que la nueva contraseña sea diferente a la actual
+        if (passwordActual.equals(passwordNueva)) {
+            throw new RuntimeException("La nueva contraseña debe ser diferente a la actual.");
+        }
+        
+        // Encriptar la nueva contraseña
+        String passwordEncriptada = passwordEncoder.encode(passwordNueva);
+        
+        // Actualizar la contraseña
+        usuario.setPassword(passwordEncriptada);
+        usuarioRepository.save(usuario);
     }
 }

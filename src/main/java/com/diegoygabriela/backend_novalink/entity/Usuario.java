@@ -46,4 +46,12 @@ public class Usuario implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+    
+    // Código único para formar parejas (generado automáticamente)
+    @Column(length = 10, unique = true)
+    private String codigoRelacion;
+    
+    // Estado de disponibilidad para formar pareja
+    @Column(nullable = false)
+    private Boolean disponibleParaPareja = true;
 } 

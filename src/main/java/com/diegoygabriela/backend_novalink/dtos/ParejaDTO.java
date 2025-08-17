@@ -1,7 +1,6 @@
 package com.diegoygabriela.backend_novalink.dtos;
 
 import lombok.*;
-import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -11,19 +10,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ParejaDTO {
     private Long id;
-    
-    @NotNull(message = "El primer usuario es obligatorio")
     private Long usuario1Id;
-    
-    @NotNull(message = "El segundo usuario es obligatorio")
     private Long usuario2Id;
-    
     private LocalDate fechaCreacion;
+    private String estadoRelacion;
     
-    @Pattern(regexp = "^(activa|pausada|terminada)$", message = "Estado debe ser: activa, pausada o terminada")
-    private String estadoRelacion = "activa";
-    
-    // Campos informativos (solo lectura)
+    // Información básica de usuarios
     private String usuario1Nombre;
+    private String usuario1Apellido;
+    private String usuario1FotoPerfil;
     private String usuario2Nombre;
+    private String usuario2Apellido;
+    private String usuario2FotoPerfil;
+    
+    // Campo calculado
+    private Long diasRelacion;
+    private String estadoRelacionFormateado;
 }

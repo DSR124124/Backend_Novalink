@@ -36,18 +36,18 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public void eliminar(@PathVariable("id") Long id) {
+    public void eliminar(@PathVariable("id") Integer id) {
         usuarioService.delete(id);
     }
 
     @PutMapping("/modificar")
     public void modificar(@Valid @RequestBody UsuarioDTO dto) {
         Usuario usuario = modelMapper.map(dto, Usuario.class);
-        usuarioService.insert(usuario); // Insert funciona también como update en JPA
+        usuarioService.update(usuario); // Use update method instead of insert
     }
 
     @GetMapping("/listar-por-id/{id}")
-    public UsuarioDTO listarId(@PathVariable("id") Long id) {
+    public UsuarioDTO listarId(@PathVariable("id") Integer id) {
         return modelMapper.map(usuarioService.listId(id), UsuarioDTO.class);
     }
     

@@ -34,17 +34,47 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    public void update(Usuario usuario) {
+        // Verify the user exists
+        if (usuario.getIdUsuario() == null) {
+            throw new RuntimeException("El ID del usuario es requerido para la actualización.");
+        }
+        
+        Usuario existingUsuario = usuarioRepository.findById(usuario.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + usuario.getIdUsuario()));
+        
+        // Check if username already exists (excluding current user)
+        if (usuario.getUsername() != null && !usuario.getUsername().equals(existingUsuario.getUsername())) {
+            Usuario usuarioWithUsername = findByUsername(usuario.getUsername());
+            if (usuarioWithUsername != null && !usuarioWithUsername.getIdUsuario().equals(usuario.getIdUsuario())) {
+                throw new RuntimeException("El username '" + usuario.getUsername() + "' ya está en uso. Por favor, elige otro username.");
+            }
+        }
+        
+        // Check if email already exists (excluding current user)
+        if (usuario.getCorreo() != null && !usuario.getCorreo().equals(existingUsuario.getCorreo())) {
+            Usuario usuarioWithEmail = usuarioRepository.findByCorreo(usuario.getCorreo());
+            if (usuarioWithEmail != null && !usuarioWithEmail.getIdUsuario().equals(usuario.getIdUsuario())) {
+                throw new RuntimeException("El correo '" + usuario.getCorreo() + "' ya está registrado. Por favor, usa otro correo.");
+            }
+        }
+        
+        // Preserve the original ID and update the user
+        usuarioRepository.save(usuario);
+    }
+
+    @Override
     public List<Usuario> list() {
         return usuarioRepository.findAll();
     }
 
     @Override
-    public void delete(Long idUsuario) {
+    public void delete(Integer idUsuario) {
         usuarioRepository.deleteById(idUsuario);
     }
 
     @Override
-    public Usuario listId(Long idUsuario) {
+    public Usuario listId(Integer idUsuario) {
         return usuarioRepository.findById(idUsuario).orElse(new Usuario());
     }
     

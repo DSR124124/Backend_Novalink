@@ -53,5 +53,6 @@ public class Usuario implements Serializable {
     
     // Estado de disponibilidad para formar pareja
     @Column(nullable = false)
+    @Builder.Default
     private Boolean disponibleParaPareja = true;
 } 

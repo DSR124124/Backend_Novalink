@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CodigoRelacionDTO {
     
-    private Integer idUsuario;
+    private Long idUsuario;
     private String codigoRelacion;
     private String mensaje;
     private Boolean exito;

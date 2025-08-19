@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UsuarioDTO {
 
-    private Integer idUsuario;
+    private Long idUsuario;
     
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50, message = "El nombre no puede exceder 50 caracteres")
@@ -52,6 +52,14 @@ public class UsuarioDTO {
     
     @NotNull(message = "El rol es obligatorio")
     private Role role;
+    
+    // Código único para formar parejas (generado automáticamente)
+    @Size(max = 10, message = "El código de relación no puede exceder 10 caracteres")
+    private String codigoRelacion;
+    
+    // Estado de disponibilidad para formar pareja
+    @NotNull(message = "El estado de disponibilidad para pareja es obligatorio")
+    private Boolean disponibleParaPareja = true;
 
 }
 

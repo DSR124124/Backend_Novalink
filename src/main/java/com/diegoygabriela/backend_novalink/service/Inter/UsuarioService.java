@@ -10,8 +10,8 @@ public interface UsuarioService {
     // CRUD básico
     void insert(Usuario usuario);
     void update(Usuario usuario);
-    void delete(Integer idUsuario);
-    Usuario listId(Integer idUsuario);
+    void delete(Long idUsuario);
+    Usuario listId(Long idUsuario);
     List<Usuario> list();
     
     // ===== BÚSQUEDAS ESPECÍFICAS =====
@@ -21,9 +21,9 @@ public interface UsuarioService {
     
     // ===== GESTIÓN DE CONTRASEÑAS =====
     
-    void cambiarPassword(Integer idUsuario, String passwordActual, String passwordNueva);
+    void cambiarPassword(Long idUsuario, String passwordActual, String passwordNueva);
     
     // ===== GESTIÓN DE CÓDIGOS DE RELACIÓN =====
     
-    String generarCodigoRelacion(Integer idUsuario);
+    String generarCodigoRelacion(Long idUsuario);
 }

@@ -14,9 +14,9 @@ public interface DetalleRegaloService {
     
     // Métodos adicionales para funcionalidad de regalos
     public List<DetalleRegalo> findByParejaId(Long parejaId);
-    public List<DetalleRegalo> findByRemitenteId(Integer remitenteId);
-    public List<DetalleRegalo> findByReceptorId(Integer receptorId);
-    public List<DetalleRegalo> findRegalosBetweenUsers(Integer usuario1Id, Integer usuario2Id);
+    public List<DetalleRegalo> findByRemitenteId(Long remitenteId);
+    public List<DetalleRegalo> findByReceptorId(Long receptorId);
+    public List<DetalleRegalo> findRegalosBetweenUsers(Long usuario1Id, Long usuario2Id);
     public List<DetalleRegalo> findByFechaBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
     public List<DetalleRegalo> findByCitaId(Long citaId);
     public List<DetalleRegalo> findByEventoId(Long eventoId);

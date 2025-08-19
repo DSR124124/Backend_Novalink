@@ -12,8 +12,7 @@ import jakarta.validation.constraints.*;
 @AllArgsConstructor
 public class CambioPasswordDTO {
     
-    @NotNull(message = "El ID del usuario es obligatorio")
-    private Integer idUsuario;
+    private Long idUsuario;
     
     @NotBlank(message = "La contraseña actual es obligatoria")
     private String passwordActual;

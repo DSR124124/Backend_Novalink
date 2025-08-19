@@ -40,17 +40,17 @@ public class DetalleRegaloServiceImpl implements DetalleRegaloService {
     }
 
     @Override
-    public List<DetalleRegalo> findByRemitenteId(Integer remitenteId) {
+    public List<DetalleRegalo> findByRemitenteId(Long remitenteId) {
         return detalleRegaloRepository.findByRemitenteIdUsuarioOrderByFechaDesc(remitenteId);
     }
 
     @Override
-    public List<DetalleRegalo> findByReceptorId(Integer receptorId) {
+    public List<DetalleRegalo> findByReceptorId(Long receptorId) {
         return detalleRegaloRepository.findByReceptorIdUsuarioOrderByFechaDesc(receptorId);
     }
 
     @Override
-    public List<DetalleRegalo> findRegalosBetweenUsers(Integer usuario1Id, Integer usuario2Id) {
+    public List<DetalleRegalo> findRegalosBetweenUsers(Long usuario1Id, Long usuario2Id) {
         return detalleRegaloRepository.findRegalosBetweenUsers(usuario1Id, usuario2Id);
     }
 

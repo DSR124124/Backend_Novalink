@@ -75,7 +75,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/listar-por-id/{id}")
-    public MensajeErrorDTO listarId(@PathVariable("id") Integer id) {
+    public MensajeErrorDTO listarId(@PathVariable("id") Long id) {
         try {
             Usuario usuario = usuarioService.listId(id);
             if (usuario == null) {
@@ -180,7 +180,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public MensajeErrorDTO eliminar(@PathVariable("id") Integer id) {
+    public MensajeErrorDTO eliminar(@PathVariable("id") Long id) {
         try {
             usuarioService.delete(id);
             

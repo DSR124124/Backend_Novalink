@@ -177,7 +177,7 @@ public class DetalleRegaloController {
     }
 
     @GetMapping("/remitente/{remitenteId}")
-    public MensajeErrorDTO listarPorRemitente(@PathVariable("remitenteId") Integer remitenteId) {
+    public MensajeErrorDTO listarPorRemitente(@PathVariable("remitenteId") Long remitenteId) {
         try {
             List<DetalleRegaloDTO> detalles = detalleRegaloService.findByRemitenteId(remitenteId).stream()
                 .map(detalle -> modelMapper.map(detalle, DetalleRegaloDTO.class))
@@ -205,7 +205,7 @@ public class DetalleRegaloController {
     }
 
     @GetMapping("/receptor/{receptorId}")
-    public MensajeErrorDTO listarPorReceptor(@PathVariable("receptorId") Integer receptorId) {
+    public MensajeErrorDTO listarPorReceptor(@PathVariable("receptorId") Long receptorId) {
         try {
             List<DetalleRegaloDTO> detalles = detalleRegaloService.findByReceptorId(receptorId).stream()
                 .map(detalle -> modelMapper.map(detalle, DetalleRegaloDTO.class))
@@ -233,7 +233,7 @@ public class DetalleRegaloController {
     }
 
     @GetMapping("/entre-usuarios/{usuario1Id}/{usuario2Id}")
-    public MensajeErrorDTO listarEntreUsuarios(@PathVariable("usuario1Id") Integer usuario1Id, @PathVariable("usuario2Id") Integer usuario2Id) {
+    public MensajeErrorDTO listarEntreUsuarios(@PathVariable("usuario1Id") Long usuario1Id, @PathVariable("usuario2Id") Long usuario2Id) {
         try {
             List<DetalleRegaloDTO> detalles = detalleRegaloService.findRegalosBetweenUsers(usuario1Id, usuario2Id).stream()
                 .map(detalle -> modelMapper.map(detalle, DetalleRegaloDTO.class))

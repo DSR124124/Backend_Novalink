@@ -103,12 +103,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void delete(Integer idUsuario) {
+    public void delete(Long idUsuario) {
         usuarioRepository.deleteById(idUsuario);
     }
 
     @Override
-    public Usuario listId(Integer idUsuario) {
+    public Usuario listId(Long idUsuario) {
         return usuarioRepository.findById(idUsuario).orElse(new Usuario());
     }
     
@@ -123,7 +123,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void cambiarPassword(Integer idUsuario, String passwordActual, String passwordNueva) {
+    public void cambiarPassword(Long idUsuario, String passwordActual, String passwordNueva) {
         // Verificar que el usuario existe
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
@@ -147,7 +147,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public String generarCodigoRelacion(Integer idUsuario) {
+    public String generarCodigoRelacion(Long idUsuario) {
         // Verificar que el usuario existe
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));

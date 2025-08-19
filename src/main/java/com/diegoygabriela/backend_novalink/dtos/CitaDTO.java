@@ -42,6 +42,12 @@ public class CitaDTO {
     @Max(value = 5, message = "El rating máximo es 5")
     private Integer rating;
     
+    // Recuerdos multimedia (fotos, videos, etc.)
+    private java.util.List<Long> recuerdosIds;
+    
+    // Notas personales asociadas a la cita
+    private java.util.List<Long> notasIds;
+    
     // Campos informativos (solo lectura)
     private String lugarNombre;
     private String categoriaNombre;

@@ -122,7 +122,7 @@ public class ParejaController {
     }
 
     @GetMapping("/puede-crear-pareja/{idUsuario}")
-    public MensajeErrorDTO puedeCrearPareja(@PathVariable Integer idUsuario) {
+    public MensajeErrorDTO puedeCrearPareja(@PathVariable Long idUsuario) {
         try {
             Usuario usuario = usuarioService.listId(idUsuario);
             if (usuario == null) {
@@ -167,7 +167,7 @@ public class ParejaController {
     }
 
     @GetMapping("/info-relacion/{idUsuario}")
-    public MensajeErrorDTO obtenerInfoRelacion(@PathVariable Integer idUsuario) {
+    public MensajeErrorDTO obtenerInfoRelacion(@PathVariable Long idUsuario) {
         try {
             Optional<Pareja> parejaOpt = parejaService.buscarPorUsuario(idUsuario);
             if (!parejaOpt.isPresent()) {

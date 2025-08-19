@@ -9,18 +9,18 @@ public interface ParejaService {
     // ===== GESTIÓN BÁSICA DE PAREJAS =====
     
     // Crear nueva pareja
-    Pareja crearPareja(Integer usuario1Id, Integer usuario2Id);
+    Pareja crearPareja(Long usuario1Id, Long usuario2Id);
     
     // Buscar pareja por usuario
-    Optional<Pareja> buscarPorUsuario(Integer usuarioId);
+    Optional<Pareja> buscarPorUsuario(Long usuarioId);
     
     // Listar todas las parejas
     List<Pareja> listarTodas();
     
     // Obtener pareja por ID
-    Optional<Pareja> buscarPorId(Integer parejaId);
+    Optional<Pareja> buscarPorId(Long parejaId);
     
     // Eliminar pareja
-    void eliminarPareja(Integer parejaId);
+    void eliminarPareja(Long parejaId);
 }
 

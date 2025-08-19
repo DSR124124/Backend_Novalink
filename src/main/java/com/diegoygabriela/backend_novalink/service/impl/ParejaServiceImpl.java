@@ -22,7 +22,7 @@ public class ParejaServiceImpl implements ParejaService {
     private UsuarioRepository usuarioRepository;
 
     @Override
-    public Pareja crearPareja(Integer usuario1Id, Integer usuario2Id) {
+    public Pareja crearPareja(Long usuario1Id, Long usuario2Id) {
         // Validar que ambos usuarios existan
         Usuario usuario1 = usuarioRepository.findById(usuario1Id)
                 .orElseThrow(() -> new RuntimeException("Usuario 1 no encontrado"));
@@ -55,7 +55,7 @@ public class ParejaServiceImpl implements ParejaService {
     }
 
     @Override
-    public Optional<Pareja> buscarPorUsuario(Integer usuarioId) {
+    public Optional<Pareja> buscarPorUsuario(Long usuarioId) {
         return parejaRepository.findByUsuarioId(usuarioId);
     }
 
@@ -65,12 +65,12 @@ public class ParejaServiceImpl implements ParejaService {
     }
 
     @Override
-    public Optional<Pareja> buscarPorId(Integer parejaId) {
+    public Optional<Pareja> buscarPorId(Long parejaId) {
         return parejaRepository.findById(parejaId);
     }
 
     @Override
-    public void eliminarPareja(Integer parejaId) {
+    public void eliminarPareja(Long parejaId) {
         parejaRepository.deleteById(parejaId);
     }
 }

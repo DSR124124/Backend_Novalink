@@ -47,7 +47,7 @@ public interface RecordatorioRepository extends JpaRepository<Recordatorio, Long
     List<Recordatorio> findByEsRecurrente(Boolean esRecurrente);
 
     // Buscar recordatorios por usuario creador
-    List<Recordatorio> findByCreadoPorIdUsuario(Integer usuarioId);
+    List<Recordatorio> findByCreadoPorIdUsuario(Long usuarioId);
 
     // Buscar recordatorios por pareja y rango de fechas
     @Query("SELECT r FROM Recordatorio r WHERE r.pareja.id = :parejaId " +

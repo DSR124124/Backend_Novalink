@@ -26,6 +26,7 @@ public class NotaDTO {
     @Size(max = 1000, message = "El contenido no puede exceder 1000 caracteres")
     private String contenido;
     
+    // Fecha de creación de la nota (opcional, se genera automáticamente)
     private LocalDateTime fechaCreacion;
     
     // Privacidad de la nota

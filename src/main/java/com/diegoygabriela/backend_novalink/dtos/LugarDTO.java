@@ -47,6 +47,9 @@ public class LugarDTO {
     // Si es un lugar favorito de la pareja
     private Boolean esFavorito = false;
     
+    // Citas que ocurrieron en este lugar (opcional)
+    private java.util.List<Long> citasIds;
+    
     // Campos informativos (solo lectura)
     private String categoriaIcono;
     private String categoriaNombre;

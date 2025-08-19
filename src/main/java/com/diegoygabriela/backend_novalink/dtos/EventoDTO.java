@@ -34,6 +34,9 @@ public class EventoDTO {
     // Lugar asociado al evento (opcional)
     private Long lugarId;
     
+    // Recuerdos asociados al evento (opcional)
+    private java.util.List<Long> recuerdosIds;
+    
     // Campos informativos (solo lectura)
     private String lugarNombre;
 }

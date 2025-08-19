@@ -26,6 +26,7 @@ public class MensajeDTO {
     private LocalDateTime fechaEnvio;
     
     @Pattern(regexp = "^(enviado|leido|eliminado)$", message = "Estado debe ser: enviado, leido o eliminado")
+    @Builder.Default
     private String estado = "enviado";
     
     // Campos informativos (solo lectura)

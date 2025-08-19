@@ -1,22 +1,26 @@
 package com.diegoygabriela.backend_novalink.service.Inter;
 
 import com.diegoygabriela.backend_novalink.entity.Pareja;
-import com.diegoygabriela.backend_novalink.entity.Usuario;
-
+import java.util.List;
 import java.util.Optional;
 
 public interface ParejaService {
     
-    // Operaciones esenciales para relaciones
-    Optional<Pareja> buscarPorUsuario(Long usuarioId);
-    Pareja cambiarEstadoRelacion(Long parejaId, String nuevoEstado);
+    // ===== GESTIÓN BÁSICA DE PAREJAS =====
     
-    // Operaciones de validación
-    boolean puedeCrearPareja(Long usuarioId);
+    // Crear nueva pareja
+    Pareja crearPareja(Integer usuario1Id, Integer usuario2Id);
     
-    // Métodos para códigos de relación
-    Pareja crearParejaConCodigo(Integer usuarioId, String codigoRelacion, String estadoRelacion);
-    boolean validarCodigoRelacion(String codigo);
-    Usuario obtenerUsuarioPorCodigo(String codigo);
+    // Buscar pareja por usuario
+    Optional<Pareja> buscarPorUsuario(Integer usuarioId);
+    
+    // Listar todas las parejas
+    List<Pareja> listarTodas();
+    
+    // Obtener pareja por ID
+    Optional<Pareja> buscarPorId(Integer parejaId);
+    
+    // Eliminar pareja
+    void eliminarPareja(Integer parejaId);
 }
 

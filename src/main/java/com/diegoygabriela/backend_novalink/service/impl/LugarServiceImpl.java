@@ -58,4 +58,20 @@ public class LugarServiceImpl implements LugarService {
     public List<Lugar> findMejorCalificados() {
         return lugarRepository.findMejorCalificados();
     }
+    
+    @Override
+    public void marcarComoFavorito(Long idLugar) {
+        Lugar lugar = lugarRepository.findById(idLugar)
+            .orElseThrow(() -> new RuntimeException("Lugar no encontrado"));
+        lugar.setEsFavorito(true);
+        lugarRepository.save(lugar);
+    }
+    
+    @Override
+    public void desmarcarComoFavorito(Long idLugar) {
+        Lugar lugar = lugarRepository.findById(idLugar)
+            .orElseThrow(() -> new RuntimeException("Lugar no encontrado"));
+        lugar.setEsFavorito(false);
+        lugarRepository.save(lugar);
+    }
 }

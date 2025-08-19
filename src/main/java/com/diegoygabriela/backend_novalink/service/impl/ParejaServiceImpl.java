@@ -5,11 +5,11 @@ import com.diegoygabriela.backend_novalink.entity.Usuario;
 import com.diegoygabriela.backend_novalink.repository.ParejaRepository;
 import com.diegoygabriela.backend_novalink.repository.UsuarioRepository;
 import com.diegoygabriela.backend_novalink.service.Inter.ParejaService;
-import com.diegoygabriela.backend_novalink.service.Inter.CodigoRelacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,63 +20,28 @@ public class ParejaServiceImpl implements ParejaService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
-    @Autowired
-    private CodigoRelacionService codigoRelacionService;
 
     @Override
-    public Optional<Pareja> buscarPorUsuario(Long usuarioId) {
-        return parejaRepository.findByUsuario1IdOrUsuario2Id(usuarioId);
-    }
-
-    @Override
-    public Pareja cambiarEstadoRelacion(Long parejaId, String nuevoEstado) {
-        Optional<Pareja> parejaOpt = parejaRepository.findById(parejaId);
-        if (parejaOpt.isEmpty()) {
-            throw new RuntimeException("La pareja no existe");
-        }
+    public Pareja crearPareja(Integer usuario1Id, Integer usuario2Id) {
+        // Validar que ambos usuarios existan
+        Usuario usuario1 = usuarioRepository.findById(usuario1Id)
+                .orElseThrow(() -> new RuntimeException("Usuario 1 no encontrado"));
         
-        Pareja pareja = parejaOpt.get();
-        pareja.setEstadoRelacion(nuevoEstado);
-        return parejaRepository.save(pareja);
-    }
-
-    @Override
-    public boolean puedeCrearPareja(Long usuarioId) {
-        Optional<Pareja> parejaExistente = buscarPorUsuario(usuarioId);
-        return parejaExistente.isEmpty() || 
-               !"activa".equals(parejaExistente.get().getEstadoRelacion());
-    }
-    
-    @Override
-    public Pareja crearParejaConCodigo(Integer usuarioId, String codigoRelacion, String estadoRelacion) {
-        // Validar que el código de relación sea válido
-        if (!validarCodigoRelacion(codigoRelacion)) {
-            throw new RuntimeException("Código de relación inválido o no disponible");
-        }
-        
-        // Obtener el usuario que se quiere unir
-        Optional<Usuario> usuario1Opt = usuarioRepository.findById(usuarioId);
-        if (usuario1Opt.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
-        Usuario usuario1 = usuario1Opt.get();
-        
-        // Obtener el usuario por código de relación
-        Usuario usuario2 = obtenerUsuarioPorCodigo(codigoRelacion);
-        if (usuario2 == null) {
-            throw new RuntimeException("Usuario con código de relación no encontrado");
-        }
+        Usuario usuario2 = usuarioRepository.findById(usuario2Id)
+                .orElseThrow(() -> new RuntimeException("Usuario 2 no encontrado"));
         
         // Validar que no sea el mismo usuario
-        if (usuario1.getIdUsuario().equals(usuario2.getIdUsuario())) {
+        if (usuario1Id.equals(usuario2Id)) {
             throw new RuntimeException("No puedes formar pareja contigo mismo");
         }
         
-        // Validar que ambos usuarios puedan crear pareja
-        if (!puedeCrearPareja(usuario1.getIdUsuario().longValue()) ||
-            !puedeCrearPareja(usuario2.getIdUsuario().longValue())) {
-            throw new RuntimeException("Uno o ambos usuarios ya tienen una pareja activa");
+        // Verificar que no tengan pareja existente
+        if (parejaRepository.existsByUsuarioId(usuario1Id)) {
+            throw new RuntimeException("Usuario 1 ya tiene una pareja");
+        }
+        
+        if (parejaRepository.existsByUsuarioId(usuario2Id)) {
+            throw new RuntimeException("Usuario 2 ya tiene una pareja");
         }
         
         // Crear la pareja
@@ -84,32 +49,29 @@ public class ParejaServiceImpl implements ParejaService {
         pareja.setUsuario1(usuario1);
         pareja.setUsuario2(usuario2);
         pareja.setFechaCreacion(LocalDate.now());
-        pareja.setEstadoRelacion(estadoRelacion != null ? estadoRelacion : "activa");
-        
-        // Invalidar el código de relación usado
-        codigoRelacionService.invalidarCodigoRelacion(codigoRelacion);
-        
-        // Marcar ambos usuarios como no disponibles para formar pareja
-        usuario1.setDisponibleParaPareja(false);
-        usuario2.setDisponibleParaPareja(false);
-        usuarioRepository.save(usuario1);
-        usuarioRepository.save(usuario2);
+        pareja.setEstadoRelacion("activa");
         
         return parejaRepository.save(pareja);
     }
 
     @Override
-    public boolean validarCodigoRelacion(String codigo) {
-        return codigoRelacionService.validarCodigoRelacion(codigo);
+    public Optional<Pareja> buscarPorUsuario(Integer usuarioId) {
+        return parejaRepository.findByUsuarioId(usuarioId);
     }
 
     @Override
-    public Usuario obtenerUsuarioPorCodigo(String codigo) {
-        Integer usuarioId = codigoRelacionService.obtenerUsuarioPorCodigo(codigo);
-        if (usuarioId == null) {
-            return null;
-        }
-        return usuarioRepository.findById(usuarioId).orElse(null);
+    public List<Pareja> listarTodas() {
+        return parejaRepository.findAll();
+    }
+
+    @Override
+    public Optional<Pareja> buscarPorId(Integer parejaId) {
+        return parejaRepository.findById(parejaId);
+    }
+
+    @Override
+    public void eliminarPareja(Integer parejaId) {
+        parejaRepository.deleteById(parejaId);
     }
 }
 

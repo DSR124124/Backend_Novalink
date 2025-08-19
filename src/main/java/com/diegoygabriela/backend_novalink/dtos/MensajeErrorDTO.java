@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodigoRelacionDTO {
+public class MensajeErrorDTO {
     
-    private Integer idUsuario;
-    private String codigoRelacion;
-    private String mensaje;
-    private Boolean exito;
-}
+    private String p_menserror;
+    private String p_mensavis;
+    private Boolean p_exito;
+    private Object p_data;
+} 

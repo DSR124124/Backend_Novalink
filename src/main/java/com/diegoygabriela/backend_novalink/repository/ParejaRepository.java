@@ -9,9 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ParejaRepository extends JpaRepository<Pareja, Long> {
-    
-    // Buscar pareja por usuario (puede ser usuario1 o usuario2)
+public interface ParejaRepository extends JpaRepository<Pareja, Integer> {
+
+    // Buscar pareja por usuario (usuario1 o usuario2)
     @Query("SELECT p FROM Pareja p WHERE p.usuario1.idUsuario = :usuarioId OR p.usuario2.idUsuario = :usuarioId")
-    Optional<Pareja> findByUsuario1IdOrUsuario2Id(@Param("usuarioId") Long usuarioId);
+    Optional<Pareja> findByUsuarioId(@Param("usuarioId") Integer usuarioId);
+    
+    // Verificar si un usuario ya tiene pareja
+    @Query("SELECT COUNT(p) > 0 FROM Pareja p WHERE p.usuario1.idUsuario = :usuarioId OR p.usuario2.idUsuario = :usuarioId")
+    boolean existsByUsuarioId(@Param("usuarioId") Integer usuarioId);
 }

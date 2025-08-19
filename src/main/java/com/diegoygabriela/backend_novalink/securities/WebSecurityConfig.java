@@ -27,23 +27,12 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        // Configuración simplificada temporal para permitir compilación
+        // Configuración temporal para permitir acceso a todos los endpoints
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/webjars/**",
-                                "/login",
-                                "/usuarios/**",
-                                "/roles/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(AbstractHttpConfigurer::disable);
+                .authorizeHttpRequests(req -> req.anyRequest().permitAll())
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable);
         
         return httpSecurity.build();
     }

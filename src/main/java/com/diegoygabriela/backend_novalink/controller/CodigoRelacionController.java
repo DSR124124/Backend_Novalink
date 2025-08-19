@@ -1,86 +1,164 @@
 package com.diegoygabriela.backend_novalink.controller;
 
-import com.diegoygabriela.backend_novalink.dtos.CodigoRelacionDTO;
+import com.diegoygabriela.backend_novalink.dtos.MensajeErrorDTO;
 import com.diegoygabriela.backend_novalink.entity.Usuario;
-import com.diegoygabriela.backend_novalink.service.Inter.CodigoRelacionService;
 import com.diegoygabriela.backend_novalink.service.Inter.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/codigos-relacion")
-@CrossOrigin(origins = "*")
+@RequestMapping("/codigos-relacion")
 public class CodigoRelacionController {
 
     @Autowired
-    private CodigoRelacionService codigoRelacionService;
-    
-    @Autowired
     private UsuarioService usuarioService;
 
-    /**
-     * Generar código de relación para un usuario
-     * POST /api/codigos-relacion/generar/{usuarioId}
-     */
-    @PostMapping("/generar/{usuarioId}")
-    public ResponseEntity<CodigoRelacionDTO> generarCodigoRelacion(@PathVariable Integer usuarioId) {
+    @PostMapping("/generar/{username}")
+    public MensajeErrorDTO generarCodigoRelacion(@PathVariable String username) {
         try {
-            Usuario usuario = usuarioService.listId(usuarioId);
+            Usuario usuario = usuarioService.findByUsername(username);
             if (usuario == null) {
-                return ResponseEntity.badRequest()
-                    .body(CodigoRelacionDTO.error("Usuario no encontrado"));
+                return MensajeErrorDTO.builder()
+                    .p_menserror("Usuario no encontrado")
+                    .p_mensavis("Verifica que el username sea correcto")
+                    .p_exito(false)
+                    .p_data(Map.of(
+                        "username", username,
+                        "error", "USER_NOT_FOUND"
+                    ))
+                    .build();
             }
-            String codigo = codigoRelacionService.generarCodigoRelacion();
-            
-            // Asignar el código al usuario
-            usuario.setCodigoRelacion(codigo);
-            usuario.setDisponibleParaPareja(true);
-            usuarioService.insert(usuario);
-            
-            String nombreCompleto = usuario.getNombre() + " " + usuario.getApellido();
-            return ResponseEntity.ok(CodigoRelacionDTO.exito(usuarioId, nombreCompleto, codigo));
-            
+            String codigoGenerado = usuarioService.generarCodigoRelacion(usuario.getIdUsuario());
+            return MensajeErrorDTO.builder()
+                .p_menserror(null)
+                .p_mensavis("Código de relación generado exitosamente")
+                .p_exito(true)
+                .p_data(Map.of(
+                    "codigo", codigoGenerado,
+                    "usuario", Map.of(
+                        "id", usuario.getIdUsuario(),
+                        "username", usuario.getUsername(),
+                        "nombre", usuario.getNombre()
+                    ),
+                    "fechaGeneracion", java.time.LocalDateTime.now().toString()
+                ))
+                .build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(CodigoRelacionDTO.error("Error al generar código: " + e.getMessage()));
+            return MensajeErrorDTO.builder()
+                .p_menserror("Error al generar código: " + e.getMessage())
+                .p_mensavis("Intenta nuevamente más tarde")
+                .p_exito(false)
+                .p_data(Map.of(
+                    "username", username,
+                    "error", e.getMessage()
+                ))
+                .build();
         }
     }
 
-    /**
-     * Obtener código de relación de un usuario
-     * GET /api/codigos-relacion/usuario/{usuarioId}
-     */
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<CodigoRelacionDTO> obtenerCodigoRelacion(@PathVariable Integer usuarioId) {
+    @GetMapping("/usuario/{username}")
+    public MensajeErrorDTO obtenerCodigoRelacion(@PathVariable String username) {
         try {
-            Usuario usuario = usuarioService.listId(usuarioId);
+            Usuario usuario = usuarioService.findByUsername(username);
             if (usuario == null) {
-                return ResponseEntity.badRequest()
-                    .body(CodigoRelacionDTO.error("Usuario no encontrado"));
-            }
-            if (usuario.getCodigoRelacion() == null) {
-                return ResponseEntity.ok(CodigoRelacionDTO.error("El usuario no tiene código de relación"));
+                return MensajeErrorDTO.builder()
+                    .p_menserror("Usuario no encontrado")
+                    .p_mensavis("Verifica que el username sea correcto")
+                    .p_exito(false)
+                    .p_data(Map.of(
+                        "username", username,
+                        "error", "USER_NOT_FOUND"
+                    ))
+                    .build();
             }
             
-            String nombreCompleto = usuario.getNombre() + " " + usuario.getApellido();
-            return ResponseEntity.ok(CodigoRelacionDTO.exito(usuarioId, nombreCompleto, usuario.getCodigoRelacion()));
-            
+            return MensajeErrorDTO.builder()
+                .p_menserror(null)
+                .p_mensavis("Código de relación obtenido exitosamente")
+                .p_exito(true)
+                .p_data(Map.of(
+                    "codigo", usuario.getCodigoRelacion(),
+                    "usuario", Map.of(
+                        "id", usuario.getIdUsuario(),
+                        "username", usuario.getUsername(),
+                        "nombre", usuario.getNombre()
+                    ),
+                    "disponibleParaPareja", usuario.getDisponibleParaPareja()
+                ))
+                .build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(CodigoRelacionDTO.error("Error al obtener código: " + e.getMessage()));
+            return MensajeErrorDTO.builder()
+                .p_menserror("Error al obtener código: " + e.getMessage())
+                .p_mensavis("Intenta nuevamente más tarde")
+                .p_exito(false)
+                .p_data(Map.of(
+                    "username", username,
+                    "error", e.getMessage()
+                ))
+                .build();
         }
     }
 
-    /**
-     * Validar un código de relación
-     * GET /api/codigos-relacion/validar/{codigo}
-     */
     @GetMapping("/validar/{codigo}")
-    public ResponseEntity<Boolean> validarCodigoRelacion(@PathVariable String codigo) {
-        boolean esValido = codigoRelacionService.validarCodigoRelacion(codigo);
-        return ResponseEntity.ok(esValido);
+    public MensajeErrorDTO validarCodigoRelacion(@PathVariable String codigo) {
+        try {
+            Usuario usuario = usuarioService.findByCodigoRelacion(codigo);
+            if (usuario == null) {
+                return MensajeErrorDTO.builder()
+                    .p_menserror("Código de relación no válido")
+                    .p_mensavis("El código ingresado no existe")
+                    .p_exito(false)
+                    .p_data(Map.of(
+                        "codigo", codigo,
+                        "error", "INVALID_CODE"
+                    ))
+                    .build();
+            }
+            
+            if (!usuario.getDisponibleParaPareja()) {
+                return MensajeErrorDTO.builder()
+                    .p_menserror("Usuario no disponible para pareja")
+                    .p_mensavis("Este usuario ya tiene una pareja")
+                    .p_exito(false)
+                    .p_data(Map.of(
+                        "codigo", codigo,
+                        "usuario", Map.of(
+                            "id", usuario.getIdUsuario(),
+                            "username", usuario.getUsername(),
+                            "nombre", usuario.getNombre()
+                        ),
+                        "error", "USER_NOT_AVAILABLE"
+                    ))
+                    .build();
+            }
+            
+            return MensajeErrorDTO.builder()
+                .p_menserror(null)
+                .p_mensavis("Código de relación válido y usuario disponible")
+                .p_exito(true)
+                .p_data(Map.of(
+                    "codigo", codigo,
+                    "usuario", Map.of(
+                        "id", usuario.getIdUsuario(),
+                        "username", usuario.getUsername(),
+                        "nombre", usuario.getNombre(),
+                        "fotoPerfil", usuario.getFotoPerfil()
+                    ),
+                    "disponibleParaPareja", true
+                ))
+                .build();
+        } catch (Exception e) {
+            return MensajeErrorDTO.builder()
+                .p_menserror("Error al validar código: " + e.getMessage())
+                .p_mensavis("Intenta nuevamente más tarde")
+                .p_exito(false)
+                .p_data(Map.of(
+                    "codigo", codigo,
+                    "error", e.getMessage()
+                ))
+                .build();
+        }
     }
 }

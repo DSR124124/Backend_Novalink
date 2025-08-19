@@ -116,6 +116,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario findByUsername(String username) {
         return usuarioRepository.findByUsername(username);
     }
+    
+    @Override
+    public Usuario findByCodigoRelacion(String codigoRelacion) {
+        return usuarioRepository.findByCodigoRelacion(codigoRelacion);
+    }
 
     @Override
     public void cambiarPassword(Integer idUsuario, String passwordActual, String passwordNueva) {
@@ -139,5 +144,43 @@ public class UsuarioServiceImpl implements UsuarioService {
         // Actualizar la contraseña
         usuario.setPassword(passwordEncriptada);
         usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public String generarCodigoRelacion(Integer idUsuario) {
+        // Verificar que el usuario existe
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
+        
+        // Generar código único de 6 caracteres
+        String codigo;
+        boolean codigoUnico = false;
+        
+        do {
+            codigo = generarCodigoAleatorio();
+            // Verificar que el código no exista
+            Usuario usuarioExistente = usuarioRepository.findByCodigoRelacion(codigo);
+            if (usuarioExistente == null) {
+                codigoUnico = true;
+            }
+        } while (!codigoUnico);
+        
+        // Asignar el código al usuario
+        usuario.setCodigoRelacion(codigo);
+        usuarioRepository.save(usuario);
+        
+        return codigo;
+    }
+    
+    private String generarCodigoAleatorio() {
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder codigo = new StringBuilder();
+        
+        for (int i = 0; i < 6; i++) {
+            int indice = (int) (Math.random() * caracteres.length());
+            codigo.append(caracteres.charAt(indice));
+        }
+        
+        return codigo.toString();
     }
 }

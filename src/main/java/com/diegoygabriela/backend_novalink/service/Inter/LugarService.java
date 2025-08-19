@@ -17,5 +17,9 @@ public interface LugarService {
     List<Lugar> findByEsFavorito(Boolean esFavorito);
     List<Lugar> findMasVisitados();
     List<Lugar> findMejorCalificados();
+    
+    // Métodos para gestionar favoritos
+    void marcarComoFavorito(Long idLugar);
+    void desmarcarComoFavorito(Long idLugar);
 }
 

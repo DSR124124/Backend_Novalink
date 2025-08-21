@@ -1,6 +1,7 @@
 package com.diegoygabriela.backend_novalink.controller;
 
 import com.diegoygabriela.backend_novalink.dtos.MensajeErrorDTO;
+import com.diegoygabriela.backend_novalink.dtos.UnirCodigosDTO;
 import com.diegoygabriela.backend_novalink.entity.Pareja;
 import com.diegoygabriela.backend_novalink.entity.Usuario;
 import com.diegoygabriela.backend_novalink.service.Inter.ParejaService;
@@ -23,9 +24,11 @@ public class ParejaController {
     private UsuarioService usuarioService;
 
     @PostMapping("/unir-codigos")
-    public MensajeErrorDTO unirCodigos(@RequestParam String codigo1, @RequestParam String codigo2) {
+    public MensajeErrorDTO unirCodigos(@RequestBody UnirCodigosDTO unirCodigosDTO) {
         try {
-            // Buscar ambos usuarios por sus códigos
+            String codigo1 = unirCodigosDTO.getCodigo1();
+            String codigo2 = unirCodigosDTO.getCodigo2();
+            
             Usuario usuario1 = usuarioService.findByCodigoRelacion(codigo1);
             Usuario usuario2 = usuarioService.findByCodigoRelacion(codigo2);
             
@@ -34,11 +37,7 @@ public class ParejaController {
                     .p_menserror("Uno o ambos códigos no son válidos")
                     .p_mensavis("Verifica que los códigos sean correctos")
                     .p_exito(false)
-                    .p_data(createDataMap(
-                        "codigo1", codigo1,
-                        "codigo2", codigo2,
-                        "error", "INVALID_CODES"
-                    ))
+                    .p_data(createDataMap("error", "INVALID_CODES"))
                     .build();
             }
             
@@ -47,39 +46,33 @@ public class ParejaController {
                     .p_menserror("No puedes formar pareja contigo mismo")
                     .p_mensavis("Los códigos deben ser de usuarios diferentes")
                     .p_exito(false)
-                    .p_data(createDataMap(
-                        "usuario1", createDataMap("id", usuario1.getIdUsuario(), "username", usuario1.getUsername()),
-                        "usuario2", createDataMap("id", usuario2.getIdUsuario(), "username", usuario2.getUsername()),
-                        "error", "SELF_PAIRING"
-                    ))
+                    .p_data(createDataMap("error", "SELF_PAIRING"))
                     .build();
             }
             
-            if (!usuario1.getDisponibleParaPareja() || !usuario2.getDisponibleParaPareja()) {
+            // Verificar si ya tienen pareja
+            if (parejaService.buscarPorUsuario(usuario1.getIdUsuario()).isPresent()) {
                 return MensajeErrorDTO.builder()
-                    .p_menserror("Uno o ambos usuarios no están disponibles")
-                    .p_mensavis("Ambos usuarios deben estar disponibles para formar pareja")
+                    .p_menserror("Usuario 1 ya tiene una pareja")
+                    .p_mensavis("Este usuario ya está en una relación")
                     .p_exito(false)
-                    .p_data(createDataMap(
-                        "usuario1", createDataMap(
-                            "id", usuario1.getIdUsuario(),
-                            "username", usuario1.getUsername(),
-                            "disponible", usuario1.getDisponibleParaPareja()
-                        ),
-                        "usuario2", createDataMap(
-                            "id", usuario2.getIdUsuario(),
-                            "username", usuario2.getUsername(),
-                            "disponible", usuario2.getDisponibleParaPareja()
-                        ),
-                        "error", "USERS_NOT_AVAILABLE"
-                    ))
+                    .p_data(createDataMap("error", "USER1_ALREADY_PAIRED"))
+                    .build();
+            }
+            
+            if (parejaService.buscarPorUsuario(usuario2.getIdUsuario()).isPresent()) {
+                return MensajeErrorDTO.builder()
+                    .p_menserror("Usuario 2 ya tiene una pareja")
+                    .p_mensavis("Este usuario ya está en una relación")
+                    .p_exito(false)
+                    .p_data(createDataMap("error", "USER2_ALREADY_PAIRED"))
                     .build();
             }
             
             // Crear la pareja
             Pareja pareja = parejaService.crearPareja(usuario1.getIdUsuario(), usuario2.getIdUsuario());
             
-            // Actualizar estado de disponibilidad
+            // Actualizar disponibilidad
             usuario1.setDisponibleParaPareja(false);
             usuario2.setDisponibleParaPareja(false);
             usuarioService.update(usuario1);
@@ -90,20 +83,9 @@ public class ParejaController {
                 .p_mensavis("Pareja formada exitosamente")
                 .p_exito(true)
                 .p_data(createDataMap(
-                    "pareja", createDataMap(
-                        "id", pareja.getId(),
-                        "fechaCreacion", pareja.getFechaCreacion().toString()
-                    ),
-                    "usuario1", createDataMap(
-                        "id", usuario1.getIdUsuario(),
-                        "username", usuario1.getUsername(),
-                        "nombre", usuario1.getNombre()
-                    ),
-                    "usuario2", createDataMap(
-                        "id", usuario2.getIdUsuario(),
-                        "username", usuario2.getUsername(),
-                        "nombre", usuario2.getNombre()
-                    )
+                    "pareja", createDataMap("id", pareja.getId()),
+                    "usuario1", createDataMap("id", usuario1.getIdUsuario(), "username", usuario1.getUsername()),
+                    "usuario2", createDataMap("id", usuario2.getIdUsuario(), "username", usuario2.getUsername())
                 ))
                 .build();
                 
@@ -112,11 +94,7 @@ public class ParejaController {
                 .p_menserror("Error al formar pareja: " + e.getMessage())
                 .p_mensavis("Intenta nuevamente más tarde")
                 .p_exito(false)
-                .p_data(createDataMap(
-                    "codigo1", codigo1,
-                    "codigo2", codigo2,
-                    "error", e.getMessage()
-                ))
+                .p_data(createDataMap("error", e.getMessage()))
                 .build();
         }
     }
@@ -130,24 +108,25 @@ public class ParejaController {
                     .p_menserror("Usuario no encontrado")
                     .p_mensavis("Verifica que el ID sea correcto")
                     .p_exito(false)
-                    .p_data(createDataMap(
-                        "idUsuario", idUsuario,
-                        "error", "USER_NOT_FOUND"
-                    ))
+                    .p_data(createDataMap("error", "USER_NOT_FOUND"))
                     .build();
             }
             
-            boolean disponible = usuario.getDisponibleParaPareja();
+            boolean tienePareja = parejaService.buscarPorUsuario(idUsuario).isPresent();
+            boolean disponible = !tienePareja; // Si no tiene pareja, está disponible
+            
+            // Sincronizar si hay inconsistencia
+            if (usuario.getDisponibleParaPareja() != disponible) {
+                usuario.setDisponibleParaPareja(disponible);
+                usuarioService.update(usuario);
+            }
+            
             return MensajeErrorDTO.builder()
                 .p_menserror(null)
-                .p_mensavis("Estado de disponibilidad verificado")
+                .p_mensavis("Estado verificado")
                 .p_exito(true)
                 .p_data(createDataMap(
-                    "usuario", createDataMap(
-                        "id", usuario.getIdUsuario(),
-                        "username", usuario.getUsername(),
-                        "nombre", usuario.getNombre()
-                    ),
+                    "usuario", createDataMap("id", usuario.getIdUsuario(), "username", usuario.getUsername()),
                     "disponibleParaPareja", disponible,
                     "codigoRelacion", usuario.getCodigoRelacion()
                 ))
@@ -158,10 +137,7 @@ public class ParejaController {
                 .p_menserror("Error al verificar disponibilidad: " + e.getMessage())
                 .p_mensavis("Intenta nuevamente más tarde")
                 .p_exito(false)
-                .p_data(createDataMap(
-                    "idUsuario", idUsuario,
-                    "error", e.getMessage()
-                ))
+                .p_data(createDataMap("error", e.getMessage()))
                 .build();
         }
     }
@@ -170,15 +146,13 @@ public class ParejaController {
     public MensajeErrorDTO obtenerInfoRelacion(@PathVariable Long idUsuario) {
         try {
             Optional<Pareja> parejaOpt = parejaService.buscarPorUsuario(idUsuario);
+            
             if (!parejaOpt.isPresent()) {
                 return MensajeErrorDTO.builder()
                     .p_menserror("No se encontró relación")
                     .p_mensavis("Este usuario no tiene pareja")
                     .p_exito(false)
-                    .p_data(createDataMap(
-                        "idUsuario", idUsuario,
-                        "error", "NO_RELATIONSHIP"
-                    ))
+                    .p_data(createDataMap("error", "NO_RELATIONSHIP"))
                     .build();
             }
             
@@ -191,20 +165,9 @@ public class ParejaController {
                 .p_mensavis("Información de relación obtenida")
                 .p_exito(true)
                 .p_data(createDataMap(
-                    "pareja", createDataMap(
-                        "id", pareja.getId(),
-                        "fechaCreacion", pareja.getFechaCreacion().toString()
-                    ),
-                    "usuario1", createDataMap(
-                        "id", usuario1.getIdUsuario(),
-                        "username", usuario1.getUsername(),
-                        "nombre", usuario1.getNombre()
-                    ),
-                    "usuario2", createDataMap(
-                        "id", usuario2.getIdUsuario(),
-                        "username", usuario2.getUsername(),
-                        "nombre", usuario2.getNombre()
-                    )
+                    "pareja", createDataMap("id", pareja.getId()),
+                    "usuario1", createDataMap("id", usuario1.getIdUsuario(), "username", usuario1.getUsername()),
+                    "usuario2", createDataMap("id", usuario2.getIdUsuario(), "username", usuario2.getUsername())
                 ))
                 .build();
                 
@@ -213,15 +176,12 @@ public class ParejaController {
                 .p_menserror("Error al obtener información: " + e.getMessage())
                 .p_mensavis("Intenta nuevamente más tarde")
                 .p_exito(false)
-                .p_data(createDataMap(
-                    "idUsuario", idUsuario,
-                    "error", e.getMessage()
-                ))
+                .p_data(createDataMap("error", e.getMessage()))
                 .build();
         }
     }
     
-    // Método helper para crear mapas de datos compatibles con Java 8
+    // Método helper simplificado
     private Map<String, Object> createDataMap(Object... keyValuePairs) {
         Map<String, Object> data = new HashMap<>();
         for (int i = 0; i < keyValuePairs.length; i += 2) {

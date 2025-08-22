@@ -5,19 +5,20 @@ import com.diegoygabriela.backend_novalink.repository.CategoriaCitaRepository;
 import com.diegoygabriela.backend_novalink.service.Inter.CategoriaCitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoriaCitaServiceImpl implements CategoriaCitaService {
 
     private final CategoriaCitaRepository repository;
 
     @Override
-    public void insert(CategoriaCita categoria) {
-        repository.save(categoria);
+    public CategoriaCita insert(CategoriaCita categoria) {
+        return repository.save(categoria);
     }
 
     @Override
@@ -32,8 +33,22 @@ public class CategoriaCitaServiceImpl implements CategoriaCitaService {
 
     @Override
     public CategoriaCita listId(Long idCategoria) {
-        Optional<CategoriaCita> categoria = repository.findById(idCategoria);
-        return categoria.orElse(null);
+        return repository.findById(idCategoria).orElse(null);
+    }
+
+    @Override
+    public CategoriaCita update(CategoriaCita categoria) {
+        return repository.save(categoria);
+    }
+
+    @Override
+    public boolean canDelete(Long idCategoria) {
+        return countCitasByCategoria(idCategoria) == 0;
+    }
+
+    @Override
+    public long countCitasByCategoria(Long idCategoria) {
+        return repository.countCitasByCategoria(idCategoria);
     }
 }
 
